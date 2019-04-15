@@ -16,9 +16,9 @@ help: ## Show this help
 
 .PHONY: venv
 venv: ## Create a local virtualenv with polyaxon packages installed
-	@python -m venv .pvenv
-	@. .pvenv/bin/activate && pip install -U pip && pip install polyaxon-cli
-	@echo -e "\033[32m[[ Type '. .pvenv/bin/activate' to activate virtualenv ]]\033[0m"
+	@conda create --name polyaxon python=3.7
+	@source activate polyaxon && pip install -U pip && pip install polyaxon-cli
+	@echo -e "\033[32m[[ Type 'conda activate polyaxon' to activate virtual env ]]\033[0m"
 
 .PHONY: gke-polyaxon-nfs
 gke-polyaxon-nfs: ## Create a NFS server by ZFS single Node
