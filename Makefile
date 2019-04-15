@@ -84,9 +84,12 @@ docker-test-build:
 
 .PHONY: venv
 venv: ## Create a local virtualenv with default python version
-	@conda remove --name cartpole-rl --all
-	@conda create --name cartpole-rl python=3.6
-	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate cartpole-rl && pip install -U pip && pip install -r requirements.txt
+#	@conda remove --name cartpole-rl --all
+#	@conda create --name cartpole-rl python=3.6
+	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate cartpole-rl && \
+		pip install -U pip && \
+		pip install -r requirements.txt && \
+		pip install $(ROOT_PATH)
 	@echo -e "\033[32m[[ Type 'conda activate cartpole-rl' to activate virtual env ]]\033[0m"
 
 .PHONY: test
