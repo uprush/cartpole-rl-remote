@@ -7,6 +7,7 @@ GCP_ZONE            ?= my_zone
 GCP_PROJECT_ID      ?= my_project
 
 PLX_VERSION         ?= 0.4.3
+CONDA_HOME          ?= $(HOME)/anaconda3
 
 ZFS_VM              ?= polyaxon-nfs-vm
 
@@ -17,7 +18,7 @@ help: ## Show this help
 .PHONY: venv
 venv: ## Create a local virtualenv with polyaxon packages installed
 	@conda create --name polyaxon python=3.7
-	@source activate polyaxon && pip install -U pip && pip install polyaxon-cli
+	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate polyaxon && pip install -U pip && pip install polyaxon-cli
 	@echo -e "\033[32m[[ Type 'conda activate polyaxon' to activate virtual env ]]\033[0m"
 
 .PHONY: gke-polyaxon-nfs

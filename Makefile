@@ -22,6 +22,7 @@ RUN_EPISODES      ?= 200
 RUN_MODEL_IP      ?= localhost
 
 PY_ENVS           ?= 3.5 3.6
+CONDA_HOME		  ?= $(HOME)/anaconda3
 
 
 UNAME := $(shell uname -s)
@@ -85,7 +86,7 @@ docker-test-build:
 venv: ## Create a local virtualenv with default python version
 	@conda remove --name cartpole-rl --all
 	@conda create --name cartpole-rl python=3.6
-	@source activate cartpole-rl && pip install -U pip && pip install -r requirements.txt
+	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate cartpole-rl && pip install -U pip && pip install -r requirements.txt
 	@echo -e "\033[32m[[ Type 'conda activate cartpole-rl' to activate virtual env ]]\033[0m"
 
 .PHONY: test
@@ -120,7 +121,7 @@ train: clean-seldon-models ## Train model
 
 .PHONY: train-dev
 train-dev: docker-visdom clean-seldon-models ## Train a model in dev mode with render option and visdom reports (requires venv)
-	@source activate cartpole-rl && \
+	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate cartpole-rl && \
 	 cartpole -e $(TRAIN_EPISODES) -r --log-level DEBUG \
 	   --metrics-engine visdom --metrics-config '{"server": "http://127.0.0.1", "env": "main"}' \
 	   train --gamma 0.095 0.099 0.001 -f $(ROOT_PATH).models/$(MODEL_FILE)
@@ -168,14 +169,14 @@ seldon-push:  ## Push docker image for seldon deployment
 
 .PHONY: run-dev
 run-dev: docker-visdom ## Run a remote agent in dev mode with render option and visdom reports (requires venv)
-	@source activate cartpole-rl && \
+	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate cartpole-rl && \
 	 cartpole -e $(RUN_EPISODES) --log-level DEBUG \
 	   --metrics-engine visdom --metrics-config '{"server": "http://127.0.0.1", "env": "main"}' \
 	   run --host "$(RUN_MODEL_IP)" --runners 5
 
 .PHONY: run-dev-router-agent
 run-dev-router-agent: ## Run a router agent to change the default behaviour
-	@source activate cartpole-rl && \
+	@. $(CONDA_HOME)/etc/profile.d/conda.sh && conda activate cartpole-rl && \
 	 python $(ROOT_PATH)/test/e2e/test_router.py --visdom-config '{"server": "http://127.0.0.1", "env": "main"}' \
 	 -pref-branch 1 -router-name eg-router -api-server $(RUN_MODEL_IP) --num-reqs 20000
 
