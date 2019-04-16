@@ -122,7 +122,7 @@ Check out typing::
 
    make train-docker-modeldb
 
-Frontend is available at: http://localhost:3000
+Frontend is available at: http://localhost:3001
 
 .. image:: assets/cartpole-modeldb.gif
    :alt: Basic Scenario - ModelDB
